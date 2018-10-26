@@ -151,7 +151,7 @@ create_partition(){
     echo 2
     echo 8E
     echo w # Write changes
-  ) | sudo fdisk
+  ) | fdisk /dev/sda
 }
 #}}}
 #SETUP LUKS {{{
