@@ -32,7 +32,7 @@ select_keymap(){
 #}}}
 #DEFAULT EDITOR {{{
 select_editor(){
-  EDITOR = "nano"
+  EDITOR=nano
   package_install "$EDITOR"
 }
 #}}}
