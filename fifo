@@ -58,7 +58,7 @@ configure_mirrorlist(){
     echo " Unable to update, could not download list."
   fi
   # better repo should go first
-  pacman -Sy pacman-contrib
+  pacman -Sy --needed pacman-contrib
   cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.tmp
   rankmirrors /etc/pacman.d/mirrorlist.tmp > /etc/pacman.d/mirrorlist
   rm /etc/pacman.d/mirrorlist.tmp
@@ -439,7 +439,7 @@ select_linux_version() {
 install_base_system(){
   print_title "INSTALL BASE SYSTEM"
   print_info "Installing PGP keyring"
-  pacman -Sy archlinux-keyring
+  pacman -Sy --needed archlinux-keyring
   print_info "Using the pacstrap script we install the base system. The base-devel package group will be installed also."
   rm ${MOUNTPOINT}${EFI_MOUNTPOINT}/vmlinuz-linux
   select_linux_version
@@ -777,7 +777,7 @@ pause_function
 check_boot_system
 check_connection
 check_trim
-pacman -Sy
+pacman -Sy --needed
 while true
 do
   print_title "ARCHLINUX ULTIMATE INSTALL - https://github.com/helmuthdu/aui"
