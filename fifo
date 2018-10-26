@@ -564,41 +564,41 @@ install_bootloader(){
     print_warning "\tUEFI Mode Detected"
     bootloaders_list=("Grub2" "Syslinux" "Systemd" "rEFInd" "Skip")
   else
-    print_warning "\tBIOS Mode Detected"
-    bootloaders_list=("Grub2" "Syslinux" "Skip")
+    bootloader=Grub2
+    pacstrap ${MOUNTPOINT} grub os-prober
   fi
-  PS3="$prompt1"
-  echo -e "Install bootloader:\n"
-  select bootloader in "${bootloaders_list[@]}"; do
-    case "$REPLY" in
-      1)
-        pacstrap ${MOUNTPOINT} grub os-prober
-        break
-        ;;
-      2)
-        pacstrap ${MOUNTPOINT} syslinux gptfdisk
-        break
-        ;;
-      3)
-        break
-        ;;
-      4)
-        if [[ $UEFI -eq 1 ]]
-        then
-          pacstrap ${MOUNTPOINT} refind-efi os-prober
-          break
-        else
-          invalid_option
-        fi
-        ;;
-      5)
-        [[ $UEFI -eq 1 ]] && break || invalid_option
-        ;;
-      *)
-        invalid_option
-        ;;
-    esac
-  done
+  # PS3="$prompt1"
+  # echo -e "Install bootloader:\n"
+  # select bootloader in "${bootloaders_list[@]}"; do
+  #   case "$REPLY" in
+  #     1)
+  #       pacstrap ${MOUNTPOINT} grub os-prober
+  #       break
+  #       ;;
+  #     2)
+  #       pacstrap ${MOUNTPOINT} syslinux gptfdisk
+  #       break
+  #       ;;
+  #     3)
+  #       break
+  #       ;;
+  #     4)
+  #       if [[ $UEFI -eq 1 ]]
+  #       then
+  #         pacstrap ${MOUNTPOINT} refind-efi os-prober
+  #         break
+  #       else
+  #         invalid_option
+  #       fi
+  #       ;;
+  #     5)
+  #       [[ $UEFI -eq 1 ]] && break || invalid_option
+  #       ;;
+  #     *)
+  #       invalid_option
+  #       ;;
+  #   esac
+  # done
   [[ $UEFI -eq 1 ]] && pacstrap ${MOUNTPOINT} efibootmgr dosfstools
 }
 #}}}
@@ -615,7 +615,7 @@ configure_bootloader(){
         case "$REPLY" in
           1)
             if [[ $LUKS -eq 1 ]]; then
-              sed -i -e 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cryptdevice=\/dev\/'"${LUKS_DISK}"':lvm"/g' ${MOUNTPOINT}/etc/default/grub
+              sed -i -e 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cryptdevice=\/dev\/sda2:lvm"/g' /etc/default/grub
             fi
             if [[ $UEFI -eq 1 ]]; then
               arch_chroot "grub-install --target=x86_64-efi --efi-directory=${EFI_MOUNTPOINT} --bootloader-id=arch_grub --recheck"
