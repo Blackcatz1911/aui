@@ -32,22 +32,15 @@ select_keymap(){
 #}}}
 #DEFAULT EDITOR {{{
 select_editor(){
-  $EDITOR = "nano"
+  EDITOR = "nano"
   package_install "$EDITOR"
 }
 #}}}
 #MIRRORLIST {{{
 configure_mirrorlist(){
   country_code="DE"
-  print_title "MIRRORLIST - https://wiki.archlinux.org/index.php/Mirrors"
-  print_info "This option is a guide to selecting and configuring your mirrors, and a listing of current available mirrors."
-  OPTION=n
-  while [[ $OPTION != y ]]; do
-    country_list
-    read_input_text "Confirm country: $country_name"
-  done
 
-  url="https://www.archlinux.org/mirrorlist/?country=${country_code}&use_mirror_status=on"
+  url="https://www.archlinux.org/mirrorlist/?country=DE&use_mirror_status=on"
 
   tmpfile=$(mktemp --suffix=-mirrorlist)
 
