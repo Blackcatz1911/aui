@@ -508,9 +508,7 @@ configure_fstab(){
 #}}}
 #CONFIGURE HOSTNAME {{{
 configure_hostname(){
-  print_title "HOSTNAME - https://wiki.archlinux.org/index.php/HOSTNAME"
-  print_info "A host name is a unique name created to identify a machine on a network.Host names are restricted to alphanumeric characters.\nThe hyphen (-) can be used, but a host name cannot start or end with it. Length is restricted to 63 characters."
-  read -p "Hostname [ex: archlinux]: " host_name
+  host_name=archlinux
   echo "$host_name" > ${MOUNTPOINT}/etc/hostname
   if [[ ! -f ${MOUNTPOINT}/etc/hosts.aui ]]; then
     cp ${MOUNTPOINT}/etc/hosts ${MOUNTPOINT}/etc/hosts.aui
@@ -523,14 +521,7 @@ configure_hostname(){
 #}}}
 #CONFIGURE TIMEZONE {{{
 configure_timezone(){
-  print_title "TIMEZONE - https://wiki.archlinux.org/index.php/Timezone"
-  print_info "In an operating system the time (clock) is determined by four parts: Time value, Time standard, Time Zone, and DST (Daylight Saving Time if applicable)."
-  OPTION=n
-  while [[ $OPTION != y ]]; do
-    settimezone
-    read_input_text "Confirm timezone (${ZONE}/${SUBZONE})"
-  done
-  arch_chroot "ln -sf /usr/share/zoneinfo/${ZONE}/${SUBZONE} /etc/localtime"
+  arch_chroot "ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime"
   arch_chroot "sed -i '/#NTP=/d' /etc/systemd/timesyncd.conf"
   arch_chroot "sed -i 's/#Fallback//' /etc/systemd/timesyncd.conf"
   arch_chroot "echo \"FallbackNTP=0.pool.ntp.org 1.pool.ntp.org 0.fr.pool.ntp.org\" >> /etc/systemd/timesyncd.conf"
@@ -624,7 +615,7 @@ configure_bootloader(){
         case "$REPLY" in
           1)
             if [[ $LUKS -eq 1 ]]; then
-              sed -i -e 's/GRUB_CMDLINE_LINUX="\(.\+\)"/GRUB_CMDLINE_LINUX="\1 cryptdevice=\/dev\/'"${LUKS_DISK}"':lvm"/g' -e 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cryptdevice=\/dev\/'"${LUKS_DISK}"':crypt"/g' ${MOUNTPOINT}/etc/default/grub
+              sed -i -e 's/GRUB_CMDLINE_LINUX="\(.\+\)"/GRUB_CMDLINE_LINUX="\1 cryptdevice=\/dev\/'"${LUKS_DISK}"':lvm"/g' -e 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cryptdevice=\/dev\/'"${LUKS_DISK}"':lvm"/g' ${MOUNTPOINT}/etc/default/grub
             fi
             if [[ $UEFI -eq 1 ]]; then
               arch_chroot "grub-install --target=x86_64-efi --efi-directory=${EFI_MOUNTPOINT} --bootloader-id=arch_grub --recheck"
