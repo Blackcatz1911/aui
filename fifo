@@ -38,7 +38,7 @@ select_editor(){
 #}}}
 #MIRRORLIST {{{
 configure_mirrorlist(){
-  country_code="DE"
+  country_code=DE
 
   url="https://www.archlinux.org/mirrorlist/?country=DE&use_mirror_status=on"
 
@@ -51,9 +51,9 @@ configure_mirrorlist(){
   # Backup and replace current mirrorlist file (if new file is non-zero)
   if [[ -s ${tmpfile} ]]; then
    { echo " Backing up the original mirrorlist..."
-     mv -i /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig; } &&
+     mv -f /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig; } &&
    { echo " Rotating the new list into place..."
-     mv -i ${tmpfile} /etc/pacman.d/mirrorlist; }
+     mv -f ${tmpfile} /etc/pacman.d/mirrorlist; }
   else
     echo " Unable to update, could not download list."
   fi
